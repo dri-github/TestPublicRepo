@@ -17,13 +17,16 @@ public class UserService : IUserService
     {
         _dbContext = dbContext;
     }
+
     public async Task<User> GetUserAsync()
     {
-        throw new NotImplementedException();
+        return await _dbContext.Users.OrderBy(i => i.Sessions.Count).FirstAsync();
     }
 
     public async Task<List<User>> GetUsersAsync()
     {
-        throw new NotImplementedException();
+        return await _dbContext.Users.Where(u =>
+                                            u.Sessions.Count(s => s.DeviceType == Enums.DeviceType.Mobile) > 0
+                                           ).ToListAsync();
     }
 }
